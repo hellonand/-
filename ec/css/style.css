@@ -1,83 +1,36 @@
-/* フォントと背景 */
+/* エヴァンゲリオン風のコンソールデザイン */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #fff;
-    color: #000;
-    margin: 20px auto;
+    font-family: "Orbitron", sans-serif;
+    background-color: #0f0f0f;
+    color: #00ff00; /* グリーンの文字 */
     text-align: center;
-    max-width: 800px;
 }
 
-/* ヘッダーのスタイル */
 h1 {
-    color: #000;
+    color: #ff0000; /* 赤い警告文字 */
+    font-size: 24px;
     text-transform: uppercase;
-    font-weight: bold;
-    padding: 10px;
-    border-bottom: 2px solid #ccc;
+    border-bottom: 2px solid #ff0000; /* 赤い罫線 */
+    padding-bottom: 5px;
 }
 
-/* リンクスタイル */
 a {
+    color: #ffcc00; /* NERV風イエロー */
     text-decoration: none;
     font-weight: bold;
-    color: #222;
-    transition: color 0.3s ease;
-    display: block; /* スマホで見やすく */
-    padding: 5px 0;
+    display: block;
+    padding: 5px;
 }
 
 a:hover {
-    color: #555;
+    color: #ffffff; /* 白く光るリンク */
 }
 
-/* ボックスデザイン */
 .box5 {
-    background: linear-gradient(135deg, #ddd, #bbb);
+    background-color: #222;
+    border: 2px solid #ff0000;
     padding: 15px;
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-    display: block;
-    width: 80%;
-    margin: 10px auto;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #ff0000;
 }
 
-/* 罫線のスタイル */
-hr {
-    border: none;
-    text-align: center;
-}
-hr::after {
-    content: "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
-    display: block;
-    font-size: 20px;
-    font-weight: bold;
-    color: #000;
-    text-align: center;
-}
-
-
-/* --- スマホ用のスタイル --- */
-@media screen and (max-width: 600px) {
-    body {
-        font-size: 16px;
-        max-width: 95%;
-    }
-
-    h1 {
-        font-size: 22px;
-    }
-
-    h2 {
-        font-size: 18px;
-    }
-
-    .box5 {
-        width: 100%;
-        padding: 10px;
-    }
-
-    a {
-        font-size: 16px;
-    }
-}
