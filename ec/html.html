@@ -1,107 +1,47 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title>第１セメスタ 出席確認 ― NERVシステム ―</title>
+    <title>１セメスタ用 出席確認 ‼非公式‼</title>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
-        /* 全体設定 */
         body {
-            font-family: "Bank Gothic", "Arial Black", sans-serif;
-            background-color: #000;
-            color: #00FF00;
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #000;
             margin: 20px;
-            text-align: left;
-        }
-
-        /* ヘッダー */
-        h1 {
-            color: #FF0000;
-            text-decoration: none;
-            text-align: left;
-            font-family: "Bank Gothic", "Arial Black", sans-serif;
-            font-style: italic; /* 斜め文字 */
-            border-bottom: 3px solid #FF0000;
-            padding-bottom: 5px;
-        }
-
-        /* ボックスデザイン */
-        .box5 {
-            background-color: rgba(25, 25, 112, 0.9);
-            padding: 15px;
-            border-radius: 10px;
-            width: 100%;
-            margin: 10px auto;
-            border: 2px solid #FF0000;
-            box-shadow: 0px 0px 10px #FF0000;
-        }
-
-        /* 警報アラート */
-        .box-alert {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.5rem 2rem 3rem;
-            background-repeat: no-repeat;
-            background-size: calc(100% - 6px) calc(100% - 6px), 100% 100%;
-            background-position: 3px 3px, 0;
-        }
-
-        .box-alert::before {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 30px;
-            width: 100%;
-            content: '';
-        }
-
-        .box-alert-error {
-            background-image:
-                linear-gradient(-135deg, transparent 0 30px, #010101 30px),
-                linear-gradient(-135deg, transparent 0 30px, #CE3F2C 30px);
-            color: #CE3F2C;
-        }
-
-        .box-alert-error::before {
-            background: repeating-linear-gradient(-45deg, transparent 0 4px, #CE3F2C 4px 8px);
-        }
-
-        .box-alert i {
-            margin-right: 0.5rem;
-            font-size: 4rem;
-            color: #CE3F2C;
-        }
-
-        /* 警報メッセージ */
-        .alert-title,
-        .box-alert p {
-            font-family: 'Noto Serif JP', serif;
-            transform: scaleY(1.5);
-            letter-spacing: -0.1rem;
-        }
-
-        .alert-title {
-            margin-bottom: 2rem;
-            font-size: 53px;
-            font-weight: 900;
-        }
-
-        .box-alert p {
-            font-size: 23px;
-        }
-
-        /* 罫線を＠に変更 */
-        hr {
-            border: none;
             text-align: center;
         }
-
-  
-
-        /* スマホ用の調整 */
+        h1 {
+            color: #4169e1;
+            text-decoration: underline;
+        }
+        h2 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        a {
+            text-decoration: none;
+            font-weight: bold;
+            color: #222;
+            transition: color 0.3s ease;
+            display: block;
+            padding: 5px 0;
+        }
+        a:hover {
+            color: #555;
+        }
+        .box5 {
+            background-color: #e0f7fa;
+            padding: 15px;
+            border-radius: 5px;
+            width: 100%;
+            margin: 10px auto;
+        }
+        hr {
+            border: 1px solid #000;
+            margin: 20px 0;
+        }
         @media screen and (max-width: 600px) {
             body {
                 font-size: 16px;
@@ -109,6 +49,9 @@
             }
             h1 {
                 font-size: 22px;
+            }
+            h2 {
+                font-size: 18px;
             }
             .box5 {
                 width: 100%;
@@ -119,70 +62,50 @@
         }
     </style>
 </head>
+[0:03]
 <body>
-    <h1>第１セメスタ 出席確認 ― NERVシステム ―</h1>
-
-    <hr>
-
-    <!-- 警報アラート -->
-    <div class="box-alert box-alert-error">
-        <i class="fas fa-times-circle"></i>
-        <div class="alert-message">
-            <div class="alert-title">警報発令中</div>
-            <p>アラートメッセージの内容</p>
-        </div>
-    </div>
-
+    <h1>１セメスタ用 出席確認 ‼非公式‼</h1>
     <hr>
 
     <h1>月曜日</h1>
     <div class="box5">
-        <a href="#">英語理解１ gクラス(5204)</a>
-        <a href="#">数学基礎 bcクラス(7202)</a>
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/5204">英語理解１ gクラス(5204)</a>
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/7202">数学基礎 bcクラス(7202)</a>
     </div>
 
     <hr>
 
     <h1>火曜日</h1>
     <div class="box5">
-        <a href="#">言語と文化１ 中国語(5307)</a>
-        <a href="#">言語と文化１ ドイツ語(7101)</a>
-        <a href="#">情報リテラシ(7104)</a>
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/5307">言語と文化１ 中国語(5307)</a>
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/7104">情報リテラシ(7104)</a>
     </div>
 
     <hr>
 
     <h1>水曜日</h1>
     <div class="box5">
-        <a href="#">数理・データサイエンス・AI入門(7104)</a>
-        <a href="#">英語表現１ gクラス(5203)</a>
-        <a href="#">情報リテラシ演習１(8103)</a>
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/7104">数理・データサイエンス・AI入門(7104)</a>
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/5203">英語表現１ gクラス(5203)</a>
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/8103">情報リテラシ演習１(8103)</a>
     </div>
 
     <hr>
 
     <h1>木曜日</h1>
     <div class="box5">
-        <a href="#">日本語表現法 b(5304)</a> ※選択科目
-        <a href="#">倫理学(5102)</a>
-        <a href="#">憲法と社会(8204)</a>
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/5304">日本語表現法 b(5304)</a> ※選択科目
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/5102">倫理学(5102)</a>
     </div>
 
     <hr>
 
     <h1>金曜日</h1>
     <div class="box5">
-        <a href="#">高度応用情報科学概論１(7103)</a>
-        <a href="#"><strong>奇数</strong> 線形代数基礎(7103)</a>
-        <a href="#"><strong>偶数</strong> 線形代数基礎(7204)</a>
-        <a href="#">初年次教育(1331)</a>
-    </div>
-
-    <hr>
-
-    <h1>土曜日/津田沼キャンパス</h1>
-    <div class="box5">
-        <a href="#">教職概論(611)</a>
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/7103">高度応用情報科学概論１(7103)</a>
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/7103"><strong>奇数週</strong> 線形代数基礎(7103)</a>
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/7204"><strong>偶数週</strong> 線形代数基礎(7204)</a>
+        <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/1331">初年次教育(1331)</a>
     </div>
 </body>
 </html>
