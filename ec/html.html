@@ -1,56 +1,73 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <title>１S用 出席確認 非公式</title>
+    <title>第１セメスタ 出席確認 ― NERVシステム ―</title>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+        /* 全体設定 */
         body {
-            font-family: "HGP明朝B", "MS 明朝", serif;
-            background-color: #f8f9fa;
-            color: #000;
+            font-family: "Bank Gothic", "Arial Black", sans-serif;
+            background-color: #000;
+            color: #00FF00;
             margin: 20px;
-            text-align: left; /* 左寄せ */
+            text-align: left;
         }
+
+        /* ヘッダー */
         h1 {
-            color: #00008b;
-            text-decoration: note;
-            text-align: left; /* 左寄せ */
-            font-family: "HGP明朝B", "MS 明朝", serif;
+            color: #FF0000;
+            text-decoration: none;
+            text-align: left;
+            font-family: "Bank Gothic", "Arial Black", sans-serif;
             font-style: italic;
+            border-bottom: 3px solid #FF0000;
+            padding-bottom: 5px;
         }
-        h2 {
-            font-size: 1.2em;
-            margin-bottom: 10px;
-            text-align: left; /* 左寄せ */
-            font-family: "HGP明朝B", "MS 明朝", serif;
+
+        /* ボックスデザイン */
+        .box5 {
+            background-color: rgba(25, 25, 112, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+            margin: 10px auto;
+            border: 2px solid #FF0000;
+            box-shadow: 0px 0px 10px #FF0000;
         }
+
+        /* リンク */
         a {
             text-decoration: none;
             font-weight: bold;
-            color: #222;
-            transition: color 0.3s ease;
+            color: #00FF00;
+            transition: all 0.3s ease-in-out;
             display: block;
             padding: 5px 0;
-            text-align: left; /* 左寄せ */
-            font-family: "HGP明朝B", "MS 明朝", serif;
+            font-family: "Bank Gothic", "Arial Black", sans-serif;
         }
+
         a:hover {
-            color: #555;
+            color: #FF0000;
+            text-shadow: 0px 0px 5px #FF0000;
         }
-        .box5 {
-            background-color: #e0f7fa;
-            padding: 15px;
-            border-radius: 5px;
-            width: 100%;
-            margin: 10px auto;
-            text-align: left; /* 左寄せ */
-            font-family: "HGP明朝B", "MS 明朝", serif;
-        }
+
+        /* 罫線を＠に変更 */
         hr {
-            border: 1px solid #000;
-            margin: 20px 0;
+            border: none;
+            text-align: center;
         }
+
+        hr::after {
+            content: "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+            display: block;
+            font-size: 20px;
+            font-weight: bold;
+            color: #FF0000;
+            text-align: center;
+        }
+
+        /* スマホ用の調整 */
         @media screen and (max-width: 600px) {
             body {
                 font-size: 16px;
@@ -58,9 +75,6 @@
             }
             h1 {
                 font-size: 22px;
-            }
-            h2 {
-                font-size: 18px;
             }
             .box5 {
                 width: 100%;
@@ -72,7 +86,7 @@
     </style>
 </head>
 <body>
-    <h1>１S用 出席確認 "非公式"</h1>
+    <h1>第１セメスタ 出席確認 ― NERVシステム ―</h1>
     <hr>
 
     <h1>月曜日</h1>
@@ -123,14 +137,6 @@
     <h1>土曜日/津田沼キャンパス</h1>
     <div class="box5">
         <a href="https://attendance.is.it-chiba.ac.jp/attendance/class_room/611">教職概論(611)</a>
-    </div>
-    
-    <hr>
-
-    <h1>以下manaba/CITポータルリンク</h1>
-    <div class="box5">
-        <a href="https://cit.manaba.jp/ct/home">manaba</a>
-         <a href="https://portal.it-chiba.ac.jp/uprx/up/pk/pkx003/Pkx00301.xhtml#hoshoMark">CITポータル</a>
     </div>
 </body>
 </html>
