@@ -1,36 +1,79 @@
-/* エヴァンゲリオン風のコンソールデザイン */
+/* 全体設定 */
 body {
-    font-family: "Orbitron", sans-serif;
-    background-color: #0f0f0f;
-    color: #00ff00; /* グリーンの文字 */
-    text-align: center;
+    font-family: "Bank Gothic", "Arial Black", sans-serif;
+    background-color: #000;
+    color: #00FF00;
+    margin: 20px;
+    text-align: left;
 }
 
+/* ヘッダー */
 h1 {
-    color: #ff0000; /* 赤い警告文字 */
-    font-size: 24px;
-    text-transform: uppercase;
-    border-bottom: 2px solid #ff0000; /* 赤い罫線 */
+    color: #FF0000;
+    text-decoration: none;
+    text-align: left;
+    font-family: "Bank Gothic", "Arial Black", sans-serif;
+    font-style: italic; /* 斜め文字 */
+    border-bottom: 3px solid #FF0000;
     padding-bottom: 5px;
 }
 
+/* ボックスデザイン */
+.box5 {
+    background-color: rgba(25, 25, 112, 0.9);
+    padding: 15px;
+    border-radius: 10px;
+    width: 100%;
+    margin: 10px auto;
+    border: 2px solid #FF0000;
+    box-shadow: 0px 0px 10px #FF0000;
+}
+
+/* リンク */
 a {
-    color: #ffcc00; /* NERV風イエロー */
     text-decoration: none;
     font-weight: bold;
+    color: #00FF00;
+    transition: all 0.3s ease-in-out;
     display: block;
-    padding: 5px;
+    padding: 5px 0;
+    font-family: "Bank Gothic", "Arial Black", sans-serif;
 }
 
 a:hover {
-    color: #ffffff; /* 白く光るリンク */
+    color: #FF0000;
+    text-shadow: 0px 0px 5px #FF0000;
 }
 
-.box5 {
-    background-color: #222;
-    border: 2px solid #ff0000;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px #ff0000;
+/* 罫線を＠に変更 */
+hr {
+    border: none;
+    text-align: center;
+}
+
+hr::after {
+    content: "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@";
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    color: #FF0000;
+    text-align: center;
+}
+
+/* スマホ用の調整 */
+@media screen and (max-width: 600px) {
+    body {
+        font-size: 16px;
+        max-width: 95%;
+    }
+    h1 {
+        font-size: 22px;
+    }
+    .box5 {
+        width: 100%;
+    }
+    a {
+        font-size: 16px;
+    }
 }
 
