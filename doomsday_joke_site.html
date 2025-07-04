@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌍 明日地球が滅亡します 🌍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'MS Gothic', monospace;
+            background: linear-gradient(45deg, #ff0000, #8B0000, #000000);
+            color: #fff;
+            overflow-x: hidden;
+            animation: backgroundShift 5s infinite alternate;
+        }
+        
+        @keyframes backgroundShift {
+            0% { background: linear-gradient(45deg, #ff0000, #8B0000, #000000); }
+            100% { background: linear-gradient(45deg, #000000, #8B0000, #ff0000); }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: shake 0.5s infinite;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .title {
+            font-size: 3em;
+            text-shadow: 5px 5px 10px rgba(0,0,0,0.8);
+            margin-bottom: 10px;
+            animation: blink 2s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.5; }
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #ffff00;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .countdown {
+            background: rgba(0,0,0,0.8);
+            border: 3px solid #ff0000;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255,0,0,0.5);
+        }
+        
+        .countdown-title {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #ff0000;
+        }
+        
+        .countdown-timer {
+            font-size: 3em;
+            font-weight: bold;
+            color: #ffff00;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .reason-section {
+            background: rgba(0,0,0,0.6);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #ff6600;
+        }
+        
+        .reason-title {
+            font-size: 1.5em;
+            color: #ff6600;
+            margin-bottom: 15px;
+        }
+        
+        .reason-text {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        
+        .news-ticker {
+            background: #000;
+            color: #ff0000;
+            padding: 10px;
+            margin: 20px 0;
+            border: 2px solid #ff0000;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .news-ticker-content {
+            display: inline-block;
+            animation: scroll 15s linear infinite;
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .personality-section {
+            background: rgba(0,0,0,0.7);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #00ff00;
+        }
+        
+        .personality-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .personality-card {
+            background: rgba(0,0,0,0.8);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 15px;
+            transition: transform 0.3s;
+        }
+        
+        .personality-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0,255,0,0.3);
+        }
+        
+        .social-section {
+            background: rgba(0,0,0,0.6);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #0099ff;
+        }
+        
+        .social-post {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #0099ff;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #ff0000, #ff6600);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255,0,0,0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,0,0,0.5);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            border-top: 2px solid #ff0000;
+            color: #cccccc;
+        }
+        
+        @media (max-width: 768px) {
+            .title { font-size: 2em; }
+            .countdown-timer { font-size: 2em; }
+            .personality-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🌍 明日地球が滅亡します 🌍</h1>
+            <p class="subtitle">※これは完全にジョークサイトです</p>
+        </div>
+        
+        <div class="countdown">
+            <h2 class="countdown-title">⏰ 滅亡まであと</h2>
+            <div class="countdown-timer" id="countdown">23:59:59</div>
+        </div>
+        
+        <div class="news-ticker">
+            <div class="news-ticker-content">
+                🚨 速報：地球滅亡まであと24時間を切りました！各地で謎の現象が報告されています！🚨 政府は緊急会議を開催中！🚨 宇宙からの謎の電波を受信！🚨
+            </div>
+        </div>
+        
+        <div class="reason-section">
+            <h2 class="reason-title">🔥 今回の滅亡理由</h2>
+            <p class="reason-text" id="reason">読み込み中...</p>
+            <button class="btn" onclick="generateReason()">別の理由を見る</button>
+        </div>
+        
+        <div class="personality-section">
+            <h2 style="color: #00ff00; font-size: 1.5em; margin-bottom: 15px;">🧠 性格タイプ別「最後の日の過ごし方」</h2>
+            <div class="personality-grid" id="personality-grid">
+                <!-- JavaScriptで生成 -->
+            </div>
+        </div>
+        
+        <div class="social-section">
+            <h2 style="color: #0099ff; font-size: 1.5em; margin-bottom: 15px;">📱 みんなの最後のツイート</h2>
+            <div id="social-posts">
+                <!-- JavaScriptで生成 -->
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="btn" onclick="generateSocialPosts()">新しいツイートを見る</button>
+            <button class="btn" onclick="location.reload()">サイトをリセット</button>
+        </div>
+        
+        <div class="footer">
+            <p>⚠️ 注意：これは完全にジョークサイトです ⚠️</p>
+            <p>実際の災害予言ではありません。エンターテインメント目的でお楽しみください。</p>
+            <p>© 2025 地球滅亡ジョーク委員会</p>
+        </div>
+    </div>
+
+    <script>
+        // 滅亡理由のデータ
+        const reasons = [
+            "巨大隕石が地球に衝突することが判明しました",
+            "宇宙人が地球を侵略することが決定しました",
+            "人工知能が反乱を起こし、人類を支配することになりました",
+            "地球の磁場が逆転し、大混乱が発生します",
+            "太陽の活動が異常になり、地球が焼け野原になります",
+            "海面が急激に上昇し、陸地が水没します",
+            "未知のウイルスが全世界に蔓延します",
+            "地球の核が不安定になり、惑星が崩壊します",
+            "タイムトラベラーが歴史を変えてしまいました",
+            "異次元の扉が開き、怪物が侵入してきます",
+            "地球が突然ブラックホールに吸い込まれます",
+            "スーパーボルケーノが同時多発的に噴火します",
+            "地球の重力が逆転し、すべてが宇宙に飛んでいきます",
+            "巨大な宇宙クラゲが地球を食べてしまいます"
+        ];
+
+        // 性格タイプ別行動
+        const personalityTypes = [
+            {type: "INTJ", action: "完璧な終末計画を立てて、最後まで冷静に行動する"},
+            {type: "ENTP", action: "滅亡を回避する斬新なアイデアを思いつき、実行に移す"},
+            {type: "ISFJ", action: "家族や友人の安全を確保し、最後まで世話をする"},
+            {type: "ESFP", action: "パーティーを開いて、みんなで楽しく最後を迎える"},
+            {type: "ISTJ", action: "きちんと遺言を書き、整理整頓して最後を迎える"},
+            {type: "ENFP", action: "やりたかったことを全部やって、後悔のない最後にする"},
+            {type: "ISTP", action: "一人で静かに過ごし、最後の瞬間を味わう"},
+            {type: "ESTP", action: "アドレナリン全開で危険なことに挑戦する"},
+            {type: "INFJ", action: "人生の意味について深く考え、日記を書く"},
+            {type: "ENFJ", action: "みんなを励まし、希望を与えて最後まで支える"},
+            {type: "INFP", action: "美しい場所で詩を書き、芸術的な最後を迎える"},
+            {type: "ENTJ", action: "最後まで指揮を取り、効率的に物事を進める"},
+            {type: "ISFP", action: "自然の中で静かに瞑想し、平和な最後を迎える"},
+            {type: "ESFJ", action: "コミュニティを助け、みんなで支え合う"},
+            {type: "INTP", action: "滅亡の原因を分析し、最後まで研究を続ける"},
+            {type: "ESTJ", action: "秩序を維持し、最後まで責任を果たす"}
+        ];
+
+        // ソーシャルメディア投稿
+        const socialPosts = [
+            "明日地球が滅亡するらしいけど、まだ宿題終わってない... #地球滅亡 #宿題",
+            "最後の夜だから好きな人に告白しようと思います💕 #地球滅亡 #告白",
+            "地球滅亡前にラーメン食べに行きます🍜 #地球滅亡 #ラーメン",
+            "猫と一緒に最後の時間を過ごしてます🐱 #地球滅亡 #猫",
+            "結局、買い物リストの半分しか消化できなかった... #地球滅亡 #買い物",
+            "地球滅亡の日に仕事って... #地球滅亡 #仕事",
+            "今更だけど、やりたいことリスト作成中📝 #地球滅亡 #バケットリスト",
+            "最後の日なのに電車が遅延してる😅 #地球滅亡 #電車遅延",
+            "地球滅亡するなら借金チャラになるよね？ #地球滅亡 #借金",
+            "明日滅亡なのに今日も普通に営業してるコンビニすごい #地球滅亡 #コンビニ"
+        ];
+
+        // カウントダウン機能
+        function updateCountdown() {
+            const now = new Date();
+            const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+            const timeLeft = tomorrow - now;
+            
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            document.getElementById('countdown').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // 滅亡理由生成
+        function generateReason() {
+            const randomReason = reasons[Math.floor(Math.random() * reasons.length)];
+            document.getElementById('reason').textContent = randomReason;
+        }
+
+        // 性格タイプ表示
+        function displayPersonalityTypes() {
+            const grid = document.getElementById('personality-grid');
+            grid.innerHTML = '';
+            
+            personalityTypes.forEach(type => {
+                const card = document.createElement('div');
+                card.className = 'personality-card';
+                card.innerHTML = `
+                    <h3 style="color: #00ff00; margin-bottom: 10px;">${type.type}</h3>
+                    <p>${type.action}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ソーシャル投稿生成
+        function generateSocialPosts() {
+            const container = document.getElementById('social-posts');
+            container.innerHTML = '';
+            
+            // ランダムに5つの投稿を選択
+            const selectedPosts = [];
+            while (selectedPosts.length < 5) {
+                const randomPost = socialPosts[Math.floor(Math.random() * socialPosts.length)];
+                if (!selectedPosts.includes(randomPost)) {
+                    selectedPosts.push(randomPost);
+                }
+            }
+            
+            selectedPosts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.className = 'social-post';
+                postElement.innerHTML = `
+                    <strong>匿名ユーザー ${Math.floor(Math.random() * 9999)}</strong><br>
+                    ${post}
+                `;
+                container.appendChild(postElement);
+            });
+        }
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCountdown();
+            generateReason();
+            displayPersonalityTypes();
+            generateSocialPosts();
+            
+            // カウントダウンを1秒ごとに更新
+            setInterval(updateCountdown, 1000);
+        });
+    </script>
+</body>
+</html>
