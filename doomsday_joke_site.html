@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌍 明日地球が滅亡します 🌍</title>
+    <title> 明日地球が滅亡します </title>
     <style>
         * {
             margin: 0;
@@ -12,16 +12,29 @@
         }
         
         body {
-            font-family: 'MS Gothic', monospace;
-            background: linear-gradient(45deg, #ff0000, #8B0000, #000000);
+            font-family: 'MS Gothic', 'Comic Sans MS', cursive, monospace;
+            background: 
+                radial-gradient(circle at 20% 20%, #ff00ff 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, #00ffff 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, #ffff00 0%, transparent 50%),
+                linear-gradient(45deg, #ff0000, #8B0000, #000000, #00ff00, #0000ff);
+            background-size: 200% 200%;
             color: #fff;
             overflow-x: hidden;
-            animation: backgroundShift 5s infinite alternate;
+            animation: backgroundShift 3s infinite alternate, psychedelic 10s infinite;
         }
         
         @keyframes backgroundShift {
-            0% { background: linear-gradient(45deg, #ff0000, #8B0000, #000000); }
-            100% { background: linear-gradient(45deg, #000000, #8B0000, #ff0000); }
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+        
+        @keyframes psychedelic {
+            0% { filter: hue-rotate(0deg) saturate(1); }
+            25% { filter: hue-rotate(90deg) saturate(1.5); }
+            50% { filter: hue-rotate(180deg) saturate(2); }
+            75% { filter: hue-rotate(270deg) saturate(1.5); }
+            100% { filter: hue-rotate(360deg) saturate(1); }
         }
         
         .container {
@@ -44,9 +57,31 @@
         
         .title {
             font-size: 3em;
-            text-shadow: 5px 5px 10px rgba(0,0,0,0.8);
+            text-shadow: 
+                0 0 10px #ff00ff,
+                0 0 20px #ff00ff,
+                0 0 30px #ff00ff,
+                5px 5px 10px rgba(0,0,0,0.8);
             margin-bottom: 10px;
-            animation: blink 2s infinite;
+            animation: blink 1s infinite, rainbow 3s infinite, bounce 2s infinite;
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-30px); }
+            60% { transform: translateY(-15px); }
         }
         
         @keyframes blink {
@@ -57,7 +92,18 @@
         .subtitle {
             font-size: 1.2em;
             color: #ffff00;
-            animation: pulse 1s infinite;
+            animation: pulse 1s infinite, wiggle 2s infinite;
+            text-shadow: 
+                0 0 5px #ffff00,
+                0 0 10px #ffff00,
+                0 0 15px #ffff00;
+            font-family: 'Comic Sans MS', cursive;
+        }
+        
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-2deg); }
+            75% { transform: rotate(2deg); }
         }
         
         @keyframes pulse {
@@ -66,13 +112,24 @@
         }
         
         .countdown {
-            background: rgba(0,0,0,0.8);
-            border: 3px solid #ff0000;
-            border-radius: 15px;
+            background: 
+                linear-gradient(45deg, rgba(255,0,255,0.3), rgba(0,255,255,0.3)),
+                radial-gradient(circle, rgba(255,255,0,0.2), transparent),
+                rgba(0,0,0,0.9);
+            border: 5px solid #ff00ff;
+            border-radius: 0; /* 角丸を削除 */
             padding: 30px;
             margin: 30px 0;
             text-align: center;
-            box-shadow: 0 0 30px rgba(255,0,0,0.5);
+            box-shadow: 
+                0 0 30px rgba(255,0,255,0.8),
+                inset 0 0 30px rgba(0,255,255,0.3);
+            animation: borderBlink 2s infinite;
+        }
+        
+        @keyframes borderBlink {
+            0%, 100% { border-color: #ff00ff; }
+            50% { border-color: #00ffff; }
         }
         
         .countdown-title {
@@ -86,11 +143,35 @@
             font-weight: bold;
             color: #ffff00;
             font-family: 'Courier New', monospace;
+            text-shadow: 
+                0 0 10px #ffff00,
+                0 0 20px #ffff00,
+                0 0 30px #ffff00;
+            animation: digitalGlitch 3s infinite;
+        }
+        
+        @keyframes digitalGlitch {
+            0%, 90%, 100% { 
+                transform: skew(0deg);
+                filter: contrast(1);
+            }
+            91% { 
+                transform: skew(-2deg);
+                filter: contrast(1.5);
+            }
+            92% { 
+                transform: skew(2deg);
+                filter: contrast(0.8);
+            }
+            93% { 
+                transform: skew(-1deg);
+                filter: contrast(1.2);
+            }
         }
         
         .reason-section {
             background: rgba(0,0,0,0.6);
-            border-radius: 10px;
+            border-radius: 0; /* 角丸を削除 */
             padding: 20px;
             margin: 20px 0;
             border: 2px solid #ff6600;
@@ -108,13 +189,26 @@
         }
         
         .news-ticker {
-            background: #000;
-            color: #ff0000;
-            padding: 10px;
+            background: 
+                linear-gradient(90deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+            background-size: 200% 100%;
+            animation: rainbow-bg 3s linear infinite;
+            color: #000;
+            font-weight: bold;
+            padding: 15px;
             margin: 20px 0;
-            border: 2px solid #ff0000;
+            border: 3px solid #fff;
+            border-radius: 0; /* 角丸を削除 */
             overflow: hidden;
             white-space: nowrap;
+            box-shadow: 
+                0 0 20px rgba(255,255,255,0.8),
+                inset 0 0 20px rgba(0,0,0,0.3);
+        }
+        
+        @keyframes rainbow-bg {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
         }
         
         .news-ticker-content {
@@ -129,7 +223,7 @@
         
         .personality-section {
             background: rgba(0,0,0,0.7);
-            border-radius: 10px;
+            border-radius: 0; /* 角丸を削除 */
             padding: 20px;
             margin: 20px 0;
             border: 2px solid #00ff00;
@@ -145,7 +239,7 @@
         .personality-card {
             background: rgba(0,0,0,0.8);
             border: 1px solid #00ff00;
-            border-radius: 8px;
+            border-radius: 0; /* 角丸を削除 */
             padding: 15px;
             transition: transform 0.3s;
         }
@@ -157,7 +251,7 @@
         
         .social-section {
             background: rgba(0,0,0,0.6);
-            border-radius: 10px;
+            border-radius: 0; /* 角丸を削除 */
             padding: 20px;
             margin: 20px 0;
             border: 2px solid #0099ff;
@@ -165,28 +259,52 @@
         
         .social-post {
             background: rgba(255,255,255,0.1);
-            border-radius: 8px;
+            border-radius: 0; /* 角丸を削除 */
             padding: 15px;
             margin: 10px 0;
             border-left: 4px solid #0099ff;
         }
         
         .btn {
-            background: linear-gradient(45deg, #ff0000, #ff6600);
+            background: 
+                linear-gradient(45deg, 
+                    #ff00ff, #ff0080, #ff0000, #ff8000, 
+                    #ffff00, #80ff00, #00ff00, #00ff80, 
+                    #00ffff, #0080ff, #0000ff, #8000ff, #ff00ff);
+            background-size: 400% 400%;
             color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.1em;
-            border-radius: 8px;
+            border: 3px solid #fff;
+            padding: 20px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 0; /* 角丸を削除 */
             cursor: pointer;
-            margin: 10px;
+            margin: 15px;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(255,0,0,0.3);
+            box-shadow: 
+                0 0 20px rgba(255,255,255,0.5),
+                inset 0 0 20px rgba(0,0,0,0.3);
+            animation: buttonRainbow 3s linear infinite, buttonBounce 2s infinite;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            font-family: 'Impact', 'Arial Black', sans-serif;
+        }
+        
+        @keyframes buttonRainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+        
+        @keyframes buttonBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255,0,0,0.5);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 
+                0 10px 30px rgba(255,255,255,0.8),
+                inset 0 0 30px rgba(0,0,0,0.5);
+            animation-duration: 0.5s;
         }
         
         .footer {
@@ -202,10 +320,75 @@
             .countdown-timer { font-size: 2em; }
             .personality-grid { grid-template-columns: 1fr; }
         }
+        
+        /* 90年代風の装飾要素 */
+        .retro-gif {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #ff00ff, #00ffff);
+            border-radius: 0; /* 角丸を削除して四角形に */
+            display: inline-block;
+            animation: spin 2s linear infinite, colorShift 3s infinite;
+            margin: 0 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes colorShift {
+            0% { background: radial-gradient(circle, #ff00ff, #00ffff); }
+            33% { background: radial-gradient(circle, #ffff00, #ff0000); }
+            66% { background: radial-gradient(circle, #00ff00, #0000ff); }
+            100% { background: radial-gradient(circle, #ff00ff, #00ffff); }
+        }
+        
+        .blink-text {
+            animation: blink 1s infinite;
+            color: #ff00ff;
+            font-weight: bold;
+        }
+        
+        .marquee-container {
+            background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00, #ff00ff);
+            background-size: 200% 200%;
+            animation: rainbow 2s linear infinite;
+            padding: 10px;
+            margin: 20px 0;
+            border: 3px dashed #fff;
+            border-radius: 0; /* 角丸を削除 */
+        }
+        
+        .star-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            animation: twinkle 2s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- 星空背景 -->
+        <div class="star-field" id="starField"></div>
+        
         <div class="header">
             <h1 class="title">🌍 明日地球が滅亡します 🌍</h1>
             <p class="subtitle">※これは完全にジョークサイトです</p>
@@ -248,9 +431,20 @@
         </div>
         
         <div class="footer">
+            <div class="marquee-container">
+                <div class="blink-text">✨ THANK YOU FOR VISITING OUR RETRO APOCALYPSE ✨</div>
+            </div>
+            <div class="retro-gif"></div>
+            <div class="retro-gif"></div>
+            <div class="retro-gif"></div>
             <p>⚠️ 注意：これは完全にジョークサイトです ⚠️</p>
             <p>実際の災害予言ではありません。エンターテインメント目的でお楽しみください。</p>
-            <p>© 2025 地球滅亡ジョーク委員会</p>
+            <p class="blink-text">© 2025 地球滅亡ジョーク委員会 - RETRO EDITION</p>
+            <div class="marquee-container">
+                <div style="color: #000; font-weight: bold;">
+                    🌟 POWERED BY 90s NOSTALGIA 🌟
+                </div>
+            </div>
         </div>
     </div>
 
@@ -368,8 +562,22 @@
             });
         }
 
+        // 星空背景生成
+        function createStarField() {
+            const starField = document.getElementById('starField');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                starField.appendChild(star);
+            }
+        }
+
         // 初期化
         document.addEventListener('DOMContentLoaded', function() {
+            createStarField();
             updateCountdown();
             generateReason();
             displayPersonalityTypes();
@@ -377,6 +585,12 @@
             
             // カウントダウンを1秒ごとに更新
             setInterval(updateCountdown, 1000);
+            
+            // レトロサウンド効果（オプション）
+            document.addEventListener('click', function() {
+                // クリック音のシミュレーション（実際の音は出ません）
+                console.log('🔊 *RETRO CLICK SOUND*');
+            });
         });
     </script>
 </body>
