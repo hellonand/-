@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>ロケット軌道シミュレータ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Chart.js for graphs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{
+      --eva-bg:#0b0e17;
+      --eva-panel:#121629;
+      --eva-accent:#9a7cff;
+      --eva-accent-2:#20d0ff;
+      --eva-warn:#ff5f87;
+      --eva-good:#59ffa1;
+      --eva-text:#e6e6f0;
+      --eva-sub:#a8a8c0;
+      --grid:#2a2f4a;
+    }
+    html,body{
+      margin:0; padding:0; background:var(--eva-bg); color:var(--eva-text);
+      font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, sans-serif;
+    }
+    header{
+      padding:16px 24px; border-bottom:1px solid var(--grid);
+      display:flex; align-items:center; gap:16px;
+      background:linear-gradient(90deg, rgba(154,124,255,.12), rgba(32,208,255,.06) 60%, transparent);
+    }
+    header h1{
+      margin:0; font-size:20px; letter-spacing:0.08em; font-weight:700;
+    }
+    header .badge{
+      font-size:12px; color:var(--eva-accent-2); border:1px solid var(--eva-accent-2);
+      padding:2px 8px; border-radius:999px;
+    }
+    .container{
+      display:grid; grid-template-columns: 360px 1fr; gap:16px; padding:16px;
+    }
+    .panel{
+      background:var(--eva-panel); border:1px solid var(--grid); border-radius:12px; overflow:hidden;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.02) inset, 0 10px 30px rgba(0,0,0,0.25);
+    }
+    .panel h2{
+      margin:0; padding:12px 16px; font-size:14px; letter-spacing:0.12em; color:var(--eva-sub);
+      border-bottom:1px solid var(--grid); background:rgba(154,124,255,0.06);
+    }
+    .panel .body{ padding:12px 16px; }
+    .grid{
+      display:grid; gap:8px;
+    }
+    .two-col{ grid-template-columns: 1fr 1fr; }
+    .row{
+      display:flex; align-items:center; justify-content:space-between;
+      background:rgba(255,255,255,0.03); border:1px solid var(--grid);
+      border-radius:10px; padding:8px 10px;
+    }
+    label{ font-size:12px; color:var(--eva-sub); }
+    input, select{
+      background:#0d1020; color:var(--eva-text); border:1px solid var(--grid); border-radius:8px;
+      padding:6px 8px; font-size:13px; width:120px;
+    }
+    .btn{
+      appearance:none; border:none; background:linear-gradient(90deg, var(--eva-accent), var(--eva-accent-2));
+      color:#0a0a10; font-weight:700; letter-spacing:.08em; padding:10px 14px; border-radius:10px;
+      cursor:pointer;
+    }
+    .btn:disabled{ opacity:.5; cursor:not-allowed; }
+    .stack{ display:flex; gap:8px; flex-wrap:wrap; }
+    .kpi{
+      display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;
+    }
+    .card{
+      background:rgba(255,255,255,0.03); border:1px solid var(--grid);
+      border-radius:10px; padding:10px;
+    }
+    .card .label{ color:var(--eva-sub); font-size:11px; letter-spacing:.08em; }
+    .card .value{ font-size:18px; font-weight:800; margin-top:4px; }
+    .card .unit{ color:var(--eva-sub); font-size:11px; margin-left:4px; }
+    .charts{ display:grid; grid-template-columns: 1fr; gap:12px; }
+    .chart-box{ background:rgba(255,255,255,0.03); border:1px solid var(--grid); border-radius:10px; padding:10px; }
+    .legend{
+      display:flex; gap:12px; flex-wrap:wrap; color:var(--eva-sub); font-size:12px; margin-top:6px;
+    }
+    .legend .dot{ width:10px; height:10px; border-radius:999px; display:inline-block; margin-right:6px; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Cascadia Code", Consolas, "Liberation Mono", "Courier New", monospace; }
+    footer{
+      padding:12px 16px; border-top:1px dashed var(--grid); color:var(--eva-sub); font-size:12px; text-align:center;
+    }
+    .eva-border{
+      position:relative;
+    }
+    .eva-border:before{
+      content:""; position:absolute; inset:0; border:1px dashed rgba(154,124,255,.22); border-radius:12px; pointer-events:none;
+      mask: linear-gradient(#000 0 0) exclude, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+    }
+    .section-title{
+      font-size:12px; color:var(--eva-accent-2); letter-spacing:.18em; margin:10px 0 4px;
+    }
+    .scroll{
+      max-height:280px; overflow:auto; scrollbar-width:thin;
+    }
+    .kv{
+      display:grid; grid-template-columns: 210px 1fr; gap:6px; align-items:center;
+      border-bottom:1px dashed var(--grid); padding:6px 0;
+    }
+    .kv:last-child{ border-bottom:none; }
+    .kv .k{ color:var(--eva-sub); font-size:12px; }
+    .kv .v{ font-size:13px; }
+    .warning{ color:var(--eva-warn); }
+    .good{ color:var(--eva-good); }
+    .accent{ color:var(--eva-accent); }
+    .accent2{ color:var(--eva-accent-2); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ロケット軌道シミュレータ</h1>
+  </header>
+
+  <div class="container">
+    <section class="panel eva-border">
+      <h2>入力パラメータ</h2>
+      <div class="body grid">
+        <div class="section-title">ロケット</div>
+        <div class="grid two-col">
+          <div class="row">
+            <label>機体乾燥質量 [kg]</label>
+            <input id="mDry" type="number" step="0.01" value="2.50" />
+          </div>
+          <div class="row">
+            <label>推進薬質量 [kg]</label>
+            <input id="mProp" type="number" step="0.01" value="1.50" />
+          </div>
+          <div class="row">
+            <label>基準直径 [m]</label>
+            <input id="diam" type="number" step="0.001" value="0.08" />
+          </div>
+          <div class="row">
+            <label>参照面積 [m^2]</label>
+            <input id="sRef" type="number" step="0.0001" value="0.0050265" />
+          </div>
+          <div class="row">
+            <label>推力 [N]</label>
+            <input id="thrust" type="number" step="0.1" value="120.0" />
+          </div>
+          <div class="row">
+            <label>燃焼時間 [s]</label>
+            <input id="burnTime" type="number" step="0.01" value="1.30" />
+          </div>
+          <div class="row">
+            <label>フェアリング質量 [kg]</label>
+            <input id="mFair" type="number" step="0.01" value="0.20" />
+          </div>
+          <div class="row">
+            <label>フェアリング分離 [s]</label>
+            <input id="tFairSep" type="number" step="0.01" value="2.50" />
+          </div>
+          <div class="row">
+            <label>Cd0（亜音速）[-]</label>
+            <input id="cdSub" type="number" step="0.01" value="0.50" />
+          </div>
+          <div class="row">
+            <label>Cd1（超音速）[-]</label>
+            <input id="cdSup" type="number" step="0.01" value="0.70" />
+          </div>
+        </div>
+
+        <div class="section-title">初期条件・環境</div>
+        <div class="grid two-col">
+          <div class="row">
+            <label>射点緯度 [deg]</label>
+            <input id="latDeg" type="number" step="0.0001" value="35.1767" />
+          </div>
+          <div class="row">
+            <label>射点経度 [deg]</label>
+            <input id="lonDeg" type="number" step="0.0001" value="140.3571" />
+          </div>
+          <div class="row">
+            <label>射点標高 [m]</label>
+            <input id="h0" type="number" step="0.1" value="10.0" />
+          </div>
+          <div class="row">
+            <label>初期ピッチ [deg]</label>
+            <input id="pitch0" type="number" step="0.1" value="85.0" />
+          </div>
+          <div class="row">
+            <label>初期ヨー（真方位）[deg]</label>
+            <input id="yaw0" type="number" step="0.1" value="173.0" />
+          </div>
+          <div class="row">
+            <label>ランチャー長 [m]</label>
+            <input id="launcherLen" type="number" step="0.01" value="1.5" />
+          </div>
+          <div class="row">
+            <label>Δt [s]</label>
+            <input id="dt" type="number" step="0.001" value="0.01" />
+          </div>
+          <div class="row">
+            <label>最大計算時間 [s]</label>
+            <input id="tMax" type="number" step="0.1" value="60.0" />
+          </div>
+        </div>
+
+        <div class="section-title">パラシュート</div>
+        <div class="grid two-col">
+          <div class="row">
+            <label>ドラッグCdA [m^2]</label>
+            <input id="chuteCdA" type="number" step="0.001" value="0.30" />
+          </div>
+          <div class="row">
+            <label>開傘時刻 [s]</label>
+            <input id="chuteOpenTime" type="number" step="0.1" value="7.0" />
+          </div>
+        </div>
+        
+        
+
+        <div class="stack" style="margin-top:8px;">
+          <button class="btn" id="runBtn">シミュレーション開始</button>
+          <button class="btn" id="exportBtn" style="background:linear-gradient(90deg, #59ffa1, #20d0ff)">CSV保存</button>
+          <button class="btn" id="resetBtn" style="background:linear-gradient(90deg, #ff5f87, #ff9a6b)">リセット</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel eva-border">
+      <h2>結果ダッシュボード</h2>
+      <div class="body">
+        <div class="kpi">
+          <div class="card">
+            <div class="label">最大高度</div>
+            <div class="value"><span id="apAlt">-</span><span class="unit"> m</span></div>
+          </div>
+          <div class="card">
+            <div class="label">到達時間（アポジ）</div>
+            <div class="value"><span id="apTime">-</span><span class="unit"> s</span></div>
+          </div>
+          <div class="card">
+            <div class="label">ダウンレンジ</div>
+            <div class="value"><span id="downrange">-</span><span class="unit"> m</span></div>
+          </div>
+          <div class="card">
+            <div class="label">Max Q</div>
+            <div class="value"><span id="maxQ">-</span><span class="unit"> kPa</span></div>
+          </div>
+          <div class="card">
+            <div class="label">Max Q 時刻</div>
+            <div class="value"><span id="tMaxQ">-</span><span class="unit"> s</span></div>
+          </div>
+          <div class="card">
+            <div class="label">Max 速度</div>
+            <div class="value"><span id="vMax">-</span><span class="unit"> m/s</span></div>
+          </div>
+          <div class="card">
+            <div class="label">ランチャークリア</div>
+            <div class="value"><span id="tLC">-</span><span class="unit"> s</span></div>
+          </div>
+          <div class="card">
+            <div class="label">着地速度</div>
+            <div class="value"><span id="vLand">-</span><span class="unit"> m/s</span></div>
+          </div>
+          <div class="card">
+            <div class="label">着地点（緯度, 経度）</div>
+            <div class="value mono" style="font-size:12px;"><span id="landingLL">[ -, - ]</span></div>
+          </div>
+        </div>
+
+        <div class="section-title">グラフ</div>
+        <div class="charts">
+          <div class="chart-box">
+            <canvas id="altChart" height="140"></canvas>
+            <div class="legend">
+              <span><span class="dot" style="background:var(--eva-accent)"></span>高度</span>
+              <span><span class="dot" style="background:var(--eva-accent-2)"></span>速度</span>
+            </div>
+          </div>
+          <div class="chart-box">
+            <canvas id="qChart" height="140"></canvas>
+            <div class="legend">
+              <span><span class="dot" style="background:#ffcf5f"></span>動圧</span>
+              <span><span class="dot" style="background:#59ffa1"></span>マッハ数</span>
+            </div>
+          </div>
+          <div class="chart-box">
+            <canvas id="trajChart" height="160"></canvas>
+            <div class="legend">
+              <span><span class="dot" style="background:#ff5f87"></span>地上投影（ダウンレンジ）</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">主要イベント</div>
+        <div class="scroll" id="events"></div>
+
+        <div class="section-title">テレメトリ（抜粋）</div>
+        <div class="scroll" id="telemetry"></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    ForRocketのモジュール構成を参考にしたイベント駆動・Mach依存Cd・簡易重力/大気モデル・RK4積分。グラフは軸ラベル付。
+  </footer>
+
+  <script>
+/* =========================================================================
+   ForRocket風 単一HTMLロケット軌道シミュレータ
+   - モジュール構成：Environment, Atmosphere, Aerodynamics, Mass, Propulsion,
+                     Guidance, Events, Integrator(RK4), Simulation, Exporter, UI
+   - 2D（鉛直+ダウンレンジ）非回転地球近似、標準大気、Mach依存Cd、フェアリング分離、
+     パラシュート開傘、ランチャークリアイベント、MaxQ/MaxV/Apogee/着地検出
+   - 図表：高度-時間、速度-時間、動圧-時間、マッハ-時間、地上投影（ダウンレンジ）
+   ========================================================================= */
+
+/* ----------------------------- Utilities -------------------------------- */
+const clamp = (x, a, b) => Math.min(Math.max(x, a), b);
+const lerp = (a, b, t) => a + (b - a) * t;
+const toRad = d => d * Math.PI / 180;
+const toDeg = r => r * 180 / Math.PI;
+const norm = (x, y) => Math.hypot(x, y);
+const almostZero = (x, eps=1e-9) => Math.abs(x) < eps;
+
+function formatFixed(x, n=3){
+  if (!isFinite(x)) return "-";
+  return Number(x).toFixed(n);
+}
+
+/* ----------------------------- Environment ------------------------------ */
+class AtmosphereISA {
+  // 標準大気（1976）単純化：対流圏のみ近似、音速は a = sqrt(gamma*R*T)
+  constructor(){
+    this.g0 = 9.80665;     // m/s^2
+    this.R  = 287.05287;   // J/(kg*K)
+    this.gamma = 1.4;
+    this.p0 = 101325.0;    // Pa
+    this.T0 = 288.15;      // K
+    this.L  = -0.0065;     // K/m (対流圏)
+  }
+  // h: 幾何高度[m]
+  at(h){
+    const T = this.T0 + this.L * clamp(h, 0, 11000);
+    const p = this.p0 * Math.pow(T / this.T0, -this.g0 / (this.L * this.R));
+    const rho = p / (this.R * T);
+    const a = Math.sqrt(this.gamma * this.R * T);
+    return { T, p, rho, a };
+  }
+  g(h){
+    // 簡易重力（高度依存：WGS84近似ではなく r^-2 の簡易）
+    const Re = 6371000.0;
+    return 9.80665 * Math.pow(Re / (Re + h), 2.0);
+  }
+}
+
+class WindModel {
+  // 静穏（無風）モデル
+  velAt(h){
+    return { u: 0, w: 0 }; // u: 水平(ダウンレンジ), w: 鉛直(上向きを+)
+  }
+}
+
+/* ----------------------------- Aerodynamics ----------------------------- */
+class AeroModel {
+  // Mach依存Cd（簡易2点補間 + 波ドラッグ膨らみ）
+  constructor(cdSub, cdSup){
+    this.cdSub = cdSub;
+    this.cdSup = cdSup;
+  }
+  cd(M) {
+    // 亜音速->遷音速->超音速で滑らかにつなぐ
+    if (M < 0.8) return this.cdSub;
+    if (M > 1.2) return this.cdSup;
+    const t = (M - 0.8) / 0.4;
+    // 遷音速バンプ
+    const bump = 0.12 * Math.exp(-Math.pow((M - 1.0)/0.18, 2));
+    return lerp(this.cdSub, this.cdSup, t) + bump;
+  }
+}
+
+/* ------------------------------- Mass ----------------------------------- */
+class MassModel {
+  constructor(mDry, mProp, burnTime, mFair, tFairSep){
+    this.mDry0 = mDry;
+    this.mProp0 = mProp;
+    this.burnTime = burnTime;
+    this.mFair0 = mFair;
+    this.tFairSep = tFairSep;
+  }
+  mass(t){
+    const prop = clamp(1 - t / this.burnTime, 0, 1) * this.mProp0;
+    const fair = t < this.tFairSep ? this.mFair0 : 0;
+    return this.mDry0 + prop + fair;
+  }
+}
+
+/* ----------------------------- Propulsion ------------------------------- */
+class Propulsion {
+  constructor(thrust, burnTime){
+    this.thrust = thrust;
+    this.burnTime = burnTime;
+  }
+  thrustAt(t){
+    return t <= this.burnTime ? this.thrust : 0;
+  }
+  mdot(totalProp, burnTime){
+    if (burnTime <= 0) return 0;
+    return totalProp / burnTime;
+  }
+}
+
+/* ----------------------------- Guidance --------------------------------- */
+class Guidance {
+  // 発射時の固定ピッチ・ヨー、ロール無視、2D化（鉛直 + 1方向ダウンレンジ）
+  constructor(pitchDeg, yawDeg){
+    this.pitch = toRad(pitchDeg);
+    this.yaw = toRad(yawDeg);
+    // 2D方向：yaw は東回り真方位を想定、ダウンレンジは yaw 方向の水平成分のみを残す簡略化
+    this.dir2D = {
+      // 水平方向（ダウンレンジ軸）単位ベクトル: +x
+      x: Math.cos(this.yaw),
+      // 鉛直方向: +z（上）
+      z: 1.0
+    };
+  }
+  initialUnit(){
+    // ランチャー内では推力方向を固定ピッチ（2D）
+    const up = Math.sin(this.pitch);
+    const forward = Math.cos(this.pitch);
+    return { ux: forward, uz: up };
+  }
+}
+
+/* ----------------------------- Events ----------------------------------- */
+class Events {
+  constructor(){
+    this.list = [];
+  }
+  add(t, label, data={}){
+    this.list.push({ t, label, data });
+  }
+}
+
+/* ----------------------------- Integrator -------------------------------- */
+class RK4 {
+  // 2D: 状態 [x, z, vx, vz, m]、入力関数f(t, state)
+  step(f, t, y, dt){
+    const k1 = f(t, y);
+    const y2 = y.map((yi, i)=> yi + 0.5*dt*k1[i]);
+    const k2 = f(t + 0.5*dt, y2);
+    const y3 = y.map((yi, i)=> yi + 0.5*dt*k2[i]);
+    const k3 = f(t + 0.5*dt, y3);
+    const y4 = y.map((yi, i)=> yi + dt*k3[i]);
+    const k4 = f(t + dt, y4);
+    const out = y.map((yi, i)=> yi + dt*(k1[i] + 2*k2[i] + 2*k3[i] + k4[i]) / 6.0);
+    return out;
+  }
+}
+
+/* ----------------------------- Simulation -------------------------------- */
+class Simulation {
+  constructor(cfg){
+    this.cfg = cfg;
+    this.atm = new AtmosphereISA();
+    this.wind = new WindModel();
+    this.aero = new AeroModel(cfg.cdSub, cfg.cdSup);
+    this.mass = new MassModel(cfg.mDry, cfg.mProp, cfg.burnTime, cfg.mFair, cfg.tFairSep);
+    this.prop = new Propulsion(cfg.thrust, cfg.burnTime);
+    this.guid = new Guidance(cfg.pitch0, cfg.yaw0);
+    this.events = new Events();
+    this.intg = new RK4();
+
+    this.Sref = cfg.sRef;
+    this.launcherLen = cfg.launcherLen;
+    this.chuteCdA = cfg.chuteCdA;
+    this.chuteOpenTime = cfg.chuteOpenTime;
+
+    // 初期真方位（入力値そのまま）・磁方位（簡易：偏角=+7deg仮定）
+    this.initialTrueAz = cfg.yaw0;
+    this.initialMagAz = cfg.yaw0 - 7.0;
+  }
+
+  run(){
+    const dt = this.cfg.dt;
+    const tMax = this.cfg.tMax;
+
+    // 状態: x(ダウンレンジ), z(高度), vx, vz, m
+    let x = 0.0;
+    let z = this.cfg.h0;
+    let m = this.mass.mass(0);
+    let { ux, uz } = this.guid.initialUnit();
+    let v0 = 0.0; // 初速度0
+    let vx = v0 * ux;
+    let vz = v0 * uz;
+
+    let t = 0.0;
+    let clearedLauncher = false;
+    let launchClearData = null;
+
+    const data = {
+      t: [], x: [], z: [], vx: [], vz: [], v: [], rho: [], q: [], M: [], m: [], thrust: []
+    };
+
+    const record = () => {
+      const atm = this.atm.at(z);
+      const vw = this.wind.velAt(z);
+      const vrelx = vx - vw.u;
+      const vrelz = vz - vw.w;
+      const vrel = Math.hypot(vrelx, vrelz);
+      const M = vrel / atm.a;
+      const q = 0.5 * atm.rho * vrel * vrel;
+
+      data.t.push(t);
+      data.x.push(x);
+      data.z.push(z);
+      data.vx.push(vx);
+      data.vz.push(vz);
+      data.v.push(vrel);
+      data.rho.push(atm.rho);
+      data.q.push(q);
+      data.M.push(M);
+      data.m.push(m);
+      data.thrust.push(this.prop.thrustAt(t));
+    };
+
+    // 主要イベント検出用
+    let maxQ = { q: -Infinity, t: 0, z: 0 };
+    let maxV = { v: -Infinity, t: 0, z: 0 };
+    let maxM = { M: -Infinity, t: 0, z: 0 };
+
+    // フェアリング分離イベント
+    this.events.add(this.cfg.tFairSep, "フェアリング分離予定", {});
+
+    // 実装：運動方程式
+    const f = (tt, y) => {
+      let [X, Z, VX, VZ, Mmass] = y;
+      const atm = this.atm.at(Z);
+      const g = this.atm.g(Z);
+      const vw = this.wind.velAt(Z);
+
+      const vrelx = VX - vw.u;
+      const vrelz = VZ - vw.w;
+      const vrel = Math.hypot(vrelx, vrelz);
+      const Mach = vrel / atm.a;
+
+      const Cd = this.aero.cd(Mach);
+      const A = this.Sref;
+      const q = 0.5 * atm.rho * vrel * vrel;
+      const D = q * Cd * A;
+
+      // 推力方向：ランチャー内は初期方向固定、以後は速度方向へ（簡易）
+      let dirx = ux, dirz = uz;
+      if (vrel > 0.2 && Z > this.cfg.h0 + this.launcherLen) {
+        dirx = vrelx / vrel;
+        dirz = vrelz / vrel;
+      }
+
+      const T = this.prop.thrustAt(tt);
+      const Tx = T * dirx;
+      const Tz = T * dirz;
+
+      // 抗力の符号（対気速度に逆向き）
+      const Dx = vrel > 1e-6 ? D * (vrelx / vrel) : 0;
+      const Dz = vrel > 1e-6 ? D * (vrelz / vrel) : 0;
+
+      // パラシュート（ドラッグCdAで追加抗力）
+      let Dchx = 0, Dchz = 0;
+      if (tt >= this.chuteOpenTime) {
+        const Dch = 0.5 * atm.rho * vrel * vrel * this.chuteCdA;
+        Dchx = vrel > 1e-6 ? Dch * (vrelx / vrel) : 0;
+        Dchz = vrel > 1e-6 ? Dch * (vrelz / vrel) : 0;
+      }
+
+      const ax = (Tx - (Dx + Dchx)) / Mmass;
+      const az = (Tz - (Dz + Dchz)) / Mmass - g;
+
+      // 燃料消費
+      const mdot = tt <= this.prop.burnTime ? -this.prop.mdot(this.cfg.mProp, this.prop.burnTime) : 0;
+
+      return [VX, VZ, ax, az, mdot];
+    };
+
+    // ループ
+    record();
+    let apogeeFound = false;
+    let landingFound = false;
+    let apogee = { t: 0, z: z, x: 0, v: 0 };
+    let landing = { t: 0, x: 0, v: 0 };
+
+    while (t < tMax) {
+      // 発射直後のランチャー内距離でクリア判定
+      if (!clearedLauncher) {
+        const along = ( (x - 0) * ux + (z - this.cfg.h0) * uz ); // 初期推力方向への射影距離（近似）
+        if (along >= this.launcherLen) {
+          clearedLauncher = true;
+          const acc = norm(
+            (this.prop.thrustAt(t) / m) * ux,
+            (this.prop.thrustAt(t) / m) * uz - this.atm.g(z)
+          );
+          launchClearData = {
+            t,
+            accG: acc / 9.80665,
+            v: norm(vx, vz)
+          };
+          this.events.add(t, "ランチャークリア", {
+            "加速度[G]": launchClearData.accG,
+            "速度[m/s]": launchClearData.v
+          });
+        }
+      }
+
+      // フェアリング分離（質量モデルで自動反映、ここではイベント刻印）
+      if (Math.abs(t - this.cfg.tFairSep) < 0.5*this.cfg.dt) {
+        this.events.add(t, "フェアリング分離", {});
+      }
+
+      // 積分
+      const y = [x, z, vx, vz, m];
+      const yNext = this.intg.step(f, t, y, dt);
+      [x, z, vx, vz, m] = yNext;
+      t += dt;
+
+      // 地表衝突（標高 h0 を地面とする）
+      if (z <= this.cfg.h0 && t > 0.2) {
+        z = this.cfg.h0;
+        landingFound = true;
+      }
+
+      // 記録
+      {
+        const atm = this.atm.at(Math.max(0, z));
+        const vw = this.wind.velAt(z);
+        const vrelx = vx - vw.u;
+        const vrelz = vz - vw.w;
+        const vrel = Math.hypot(vrelx, vrelz);
+        const M = vrel / atm.a;
+        const q = 0.5 * atm.rho * vrel * vrel;
+
+        if (q > maxQ.q) maxQ = { q, t, z };
+        if (vrel > maxV.v) maxV = { v: vrel, t, z };
+        if (M > maxM.M) maxM = { M, t, z };
+
+        data.t.push(t);
+        data.x.push(x);
+        data.z.push(z);
+        data.vx.push(vx);
+        data.vz.push(vz);
+        data.v.push(vrel);
+        data.rho.push(atm.rho);
+        data.q.push(q);
+        data.M.push(M);
+        data.m.push(m);
+        data.thrust.push(this.prop.thrustAt(t));
+      }
+
+      // アポジ（上昇から下降に転じた瞬間の最大高度）
+      const n = data.z.length;
+      if (!apogeeFound && n >= 3) {
+        const z2 = data.z[n-1], z1 = data.z[n-2], z0 = data.z[n-3];
+        if (z2 < z1 && z1 > z0) {
+          apogeeFound = true;
+          apogee = { t: data.t[n-2], z: z1, x: data.x[n-2], v: data.v[n-2] };
+          this.events.add(apogee.t, "アポジ到達", { "高度[m]": apogee.z, "時間[s]": apogee.t });
+        }
+      }
+
+      if (landingFound) break;
+    }
+
+    // 着陸処理
+    const vLanding = data.v[data.v.length-1];
+    landing = { t: t, x: x, v: vLanding };
+    this.events.add(t, "着地", { "着地速度[m/s]": vLanding, "ダウンレンジ[m]": x });
+
+    // ランチャークリア情報（無い場合は近似）
+    if (!launchClearData) {
+      launchClearData = { t: NaN, accG: NaN, v: NaN };
+    }
+
+    // 着地点の緯度経度（単純換算：経度方向の距離≒ダウンレンジ、緯度は固定）
+    // 緯度latでの1度の長さ: 東西は 111320*cos(lat) m/deg 近似
+    const lat0 = this.cfg.latDeg;
+    const lon0 = this.cfg.lonDeg;
+    const mPerDegLon = 111320 * Math.cos(toRad(lat0));
+    const dLon = (x / mPerDegLon);
+    const latLanding = lat0;
+    const lonLanding = lon0 + dLon;
+
+    // 出力まとめ
+    const summary = {
+      initialTrueAz: this.initialTrueAz,
+      initialMagAz: this.initialMagAz,
+      launcherClear: {
+        t: launchClearData.t,
+        accG: launchClearData.accG,
+        v: launchClearData.v
+      },
+      maxQ: { t: maxQ.t, z: maxQ.z, q: maxQ.q },
+      maxV: { t: maxV.t, z: maxV.z, v: maxV.v },
+      maxM: { t: maxM.t, z: maxM.z, M: maxM.M },
+      apogee: apogee,
+      landing: { t: landing.t, x: landing.x, v: landing.v, lat: latLanding, lon: lonLanding },
+      chute: { openTime: this.chuteOpenTime }
+    };
+
+    return { data, summary, events: this.events.list };
+  }
+}
+
+/* ------------------------------ Exporter --------------------------------- */
+function toCSV(sim){
+  const { data, summary } = sim;
+  const lines = [];
+  // ヘッダ（要約）
+  lines.push("# Summary");
+  lines.push(`Initial True Azimuth [deg],${formatFixed(summary.initialTrueAz, 2)}`);
+  lines.push(`Initial Magnetic Azimuth [deg],${formatFixed(summary.initialMagAz, 2)}`);
+  lines.push(`Launcher Clear X+ [s],${formatFixed(summary.launcherClear.t, 3)}`);
+  lines.push(`Launcher Clear Acceleration [G],${formatFixed(summary.launcherClear.accG, 3)}`);
+  lines.push(`Launcher Clear Velocity [m/s],${formatFixed(summary.launcherClear.v, 3)}`);
+  lines.push(`Max Q X+ [s],${formatFixed(summary.maxQ.t, 3)}`);
+  lines.push(`Max Q Altitude [m],${formatFixed(summary.maxQ.z, 3)}`);
+  lines.push(`Max Q [kPa],${formatFixed(summary.maxQ.q/1000, 3)}`);
+  lines.push(`Max Speed X+ [s],${formatFixed(summary.maxV.t, 3)}`);
+  lines.push(`Max Speed Altitude [m],${formatFixed(summary.maxV.z, 3)}`);
+  lines.push(`Max Speed [m/s],${formatFixed(summary.maxV.v, 3)}`);
+  lines.push(`Max Mach Number X+ [s],${formatFixed(summary.maxM.t, 3)}`);
+  lines.push(`Max Mach Number Altitude [m],${formatFixed(summary.maxM.z, 3)}`);
+  lines.push(`Max Mach Number [-],${formatFixed(summary.maxM.M, 3)}`);
+  lines.push(`Apogee X+ [s],${formatFixed(summary.apogee.t, 3)}`);
+  lines.push(`Apogee Altitude [m],${formatFixed(summary.apogee.z, 3)}`);
+  lines.push(`Apogee Downrange [m],${formatFixed(summary.apogee.x, 3)}`);
+  lines.push(`Apogee Air Velocity [m/s],${formatFixed(summary.apogee.v, 3)}`);
+  lines.push(`Soft/Hard Landing X+ [s],${formatFixed(summary.landing.t, 3)}`);
+  lines.push(`Soft/Hard Landing Downrange [m],${formatFixed(summary.landing.x, 3)}`);
+  lines.push(`Soft/Hard Landing Velocity [m/s],${formatFixed(summary.landing.v, 3)}`);
+  lines.push(`Landing Point [lat,lon],[ ${formatFixed(summary.landing.lat, 8)} , ${formatFixed(summary.landing.lon, 8)} ]`);
+
+  // テレメトリ
+  lines.push("");
+  lines.push("# Telemetry (t,x,z,v,q,M,m,thrust)");
+  lines.push("t[s],x[m],z[m],v[m/s],q[Pa],M[-],m[kg],thrust[N]");
+  for (let i=0; i<data.t.length; i++){
+    lines.push([
+      formatFixed(data.t[i], 3),
+      formatFixed(data.x[i], 3),
+      formatFixed(data.z[i], 3),
+      formatFixed(data.v[i], 3),
+      formatFixed(data.q[i], 2),
+      formatFixed(data.M[i], 3),
+      formatFixed(data.m[i], 3),
+      formatFixed(data.thrust[i], 2)
+    ].join(","));
+  }
+  return lines.join("\n");
+}
+
+/* --------------------------------- UI ----------------------------------- */
+let charts = {};
+function createCharts(){
+  const axisColor = getComputedStyle(document.documentElement).getPropertyValue('--eva-sub').trim() || '#a8a8c0';
+  const tickColor = axisColor;
+  const gridColor = 'rgba(255,255,255,0.08)';
+
+  const common = {
+    responsive: true,
+    animation: false,
+    scales: {
+      x: {
+        title: { display: true, text: '時間 [s]', color: axisColor },
+        ticks: { color: tickColor },
+        grid: { color: gridColor }
+      },
+      y: {
+        title: { display: true, text: '', color: axisColor },
+        ticks: { color: tickColor },
+        grid: { color: gridColor }
+      }
+    },
+    plugins: {
+      legend: { labels: { color: axisColor } }
+    }
+  };
+
+  charts.alt = new Chart(document.getElementById('altChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        {
+          label: '高度 [m]',
+          data: [],
+          borderColor: getComputedStyle(document.documentElement).getPropertyValue('--eva-accent').trim() || '#9a7cff',
+          pointRadius: 0, borderWidth: 2
+        },
+        {
+          label: '速度 [m/s]',
+          data: [],
+          borderColor: getComputedStyle(document.documentElement).getPropertyValue('--eva-accent-2').trim() || '#20d0ff',
+          pointRadius: 0, borderWidth: 2, yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      ...common,
+      scales: {
+        x: common.scales.x,
+        y: { ...common.scales.y, title: { display: true, text: '高度 [m]' } },
+        y1: { position: 'right', title: { display: true, text: '速度 [m/s]', color: axisColor }, ticks: { color: tickColor }, grid: { drawOnChartArea: false } }
+      }
+    }
+  });
+
+  charts.q = new Chart(document.getElementById('qChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        { label: '動圧 [kPa]', data: [], borderColor: '#ffcf5f', pointRadius: 0, borderWidth: 2 },
+        { label: 'マッハ [-]', data: [], borderColor: '#59ffa1', pointRadius: 0, borderWidth: 2, yAxisID: 'y1' }
+      ]
+    },
+    options: {
+      ...common,
+      scales: {
+        x: common.scales.x,
+        y: { ...common.scales.y, title: { display: true, text: '動圧 [kPa]' } },
+        y1: { position: 'right', title: { display: true, text: 'マッハ [-]' }, ticks: { color: tickColor }, grid: { drawOnChartArea: false } }
+      }
+    }
+  });
+
+  charts.traj = new Chart(document.getElementById('trajChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        { label: 'ダウンレンジ [m]', data: [], borderColor: '#ff5f87', pointRadius: 0, borderWidth: 2 }
+      ]
+    },
+    options: {
+      responsive: true,
+      animation: false,
+      scales: {
+        x: { title: { display: true, text: '時間 [s]', color: axisColor }, ticks: { color: tickColor }, grid: { color: gridColor } },
+        y: { title: { display: true, text: 'ダウンレンジ距離 [m]', color: axisColor }, ticks: { color: tickColor }, grid: { color: gridColor } }
+      },
+      plugins: { legend: { labels: { color: axisColor } } }
+    }
+  });
+}
+
+function updateCharts(data){
+  charts.alt.data.labels = data.t;
+  charts.alt.data.datasets[0].data = data.z;
+  charts.alt.data.datasets[1].data = data.v;
+  charts.alt.update('none');
+
+  charts.q.data.labels = data.t;
+  charts.q.data.datasets[0].data = data.q.map(q=> q/1000.0);
+  charts.q.data.datasets[1].data = data.M;
+  charts.q.update('none');
+
+  charts.traj.data.labels = data.t;
+  charts.traj.data.datasets[0].data = data.x;
+  charts.traj.update('none');
+}
+
+function renderEvents(evts){
+  const el = document.getElementById('events');
+  el.innerHTML = "";
+  evts
+    .sort((a,b)=> a.t - b.t)
+    .forEach(e=>{
+      const wrap = document.createElement('div');
+      wrap.className = 'kv';
+      const k = document.createElement('div'); k.className = 'k'; k.textContent = `${formatFixed(e.t,3)} s`;
+      const v = document.createElement('div'); v.className = 'v';
+      const parts = [e.label];
+      for (const [kk, vv] of Object.entries(e.data||{})){
+        parts.push(`${kk}: ${typeof vv === 'number' ? formatFixed(vv,3) : vv}`);
+      }
+      v.textContent = parts.join(' / ');
+      wrap.appendChild(k); wrap.appendChild(v);
+      el.appendChild(wrap);
+    });
+}
+
+function renderTelemetry(data){
+  const el = document.getElementById('telemetry');
+  el.innerHTML = "";
+  const n = data.t.length;
+  const step = Math.ceil(n / 120); // 表示間引き
+  for (let i=0; i<n; i+=step){
+    const row = document.createElement('div');
+    row.className = 'kv mono';
+    const k = document.createElement('div'); k.className = 'k';
+    k.textContent = `${formatFixed(data.t[i],2)} s`;
+    const v = document.createElement('div'); v.className = 'v';
+    v.textContent =
+      `x=${formatFixed(data.x[i],1)} m, z=${formatFixed(data.z[i],1)} m, v=${formatFixed(data.v[i],2)} m/s, q=${formatFixed(data.q[i]/1000,3)} kPa, M=${formatFixed(data.M[i],3)}`;
+    row.appendChild(k); row.appendChild(v);
+    el.appendChild(row);
+  }
+}
+
+function renderSummary(sum){
+  document.getElementById('apAlt').textContent = formatFixed(sum.apogee.z, 3);
+  document.getElementById('apTime').textContent = formatFixed(sum.apogee.t, 3);
+  document.getElementById('downrange').textContent = formatFixed(sum.apogee.x, 3);
+  document.getElementById('maxQ').textContent = formatFixed(sum.maxQ.q / 1000.0, 3);
+  document.getElementById('tMaxQ').textContent = formatFixed(sum.maxQ.t, 3);
+  document.getElementById('vMax').textContent = formatFixed(sum.maxV.v, 3);
+  document.getElementById('tLC').textContent = isNaN(sum.launcherClear.t) ? "-" : formatFixed(sum.launcherClear.t, 3);
+  document.getElementById('vLand').textContent = formatFixed(sum.landing.v, 3);
+  document.getElementById('landingLL').textContent =
+    `[ ${formatFixed(sum.landing.lat,8)} , ${formatFixed(sum.landing.lon,8)} ]`;
+}
+
+function getConfigFromUI(){
+  return {
+    // Rocket
+    mDry: parseFloat(document.getElementById('mDry').value),
+    mProp: parseFloat(document.getElementById('mProp').value),
+    diam: parseFloat(document.getElementById('diam').value),
+    sRef: parseFloat(document.getElementById('sRef').value),
+    thrust: parseFloat(document.getElementById('thrust').value),
+    burnTime: parseFloat(document.getElementById('burnTime').value),
+    mFair: parseFloat(document.getElementById('mFair').value),
+    tFairSep: parseFloat(document.getElementById('tFairSep').value),
+    cdSub: parseFloat(document.getElementById('cdSub').value),
+    cdSup: parseFloat(document.getElementById('cdSup').value),
+
+    // Env
+    latDeg: parseFloat(document.getElementById('latDeg').value),
+    lonDeg: parseFloat(document.getElementById('lonDeg').value),
+    h0: parseFloat(document.getElementById('h0').value),
+    pitch0: parseFloat(document.getElementById('pitch0').value),
+    yaw0: parseFloat(document.getElementById('yaw0').value),
+    launcherLen: parseFloat(document.getElementById('launcherLen').value),
+
+    // Time
+    dt: parseFloat(document.getElementById('dt').value),
+    tMax: parseFloat(document.getElementById('tMax').value),
+
+    // Chute
+    chuteCdA: parseFloat(document.getElementById('chuteCdA').value),
+    chuteOpenTime: parseFloat(document.getElementById('chuteOpenTime').value)
+  };
+}
+
+function runSimulation(){
+  const cfg = getConfigFromUI();
+  const sim = new Simulation(cfg).run();
+  updateCharts(sim.data);
+  renderSummary(sim.summary);
+  renderEvents(sim.events);
+  renderTelemetry(sim.data);
+
+  // 参考フォーマットに近いログもコンソールへ
+  console.log(`Initial True Azimuth,${formatFixed(sim.summary.initialTrueAz,2)}[deg]`);
+  console.log(`Initial Magnetic Azimuth,${formatFixed(sim.summary.initialMagAz,2)}[deg]`);
+  console.log(`Launcher Clear X+,${formatFixed(sim.summary.launcherClear.t,3)}[s]`);
+  console.log(`Launcher Clear Acceleration,${formatFixed(sim.summary.launcherClear.accG,3)}[G]`);
+  console.log(`Launcher Clear Velocity,${formatFixed(sim.summary.launcherClear.v,3)}[m/s]`);
+  console.log(`Max Q X+,${formatFixed(sim.summary.maxQ.t,3)}[s]`);
+  console.log(`Max Q Altitude,${formatFixed(sim.summary.maxQ.z,3)}[m]`);
+  console.log(`Max Q,${formatFixed(sim.summary.maxQ.q/1000,3)}[kPa]`);
+  console.log(`Max Speed X+,${formatFixed(sim.summary.maxV.t,3)}[s]`);
+  console.log(`Max Speed Altitude,${formatFixed(sim.summary.maxV.z,3)}[m]`);
+  console.log(`Max Speed,${formatFixed(sim.summary.maxV.v,3)}[m/s]`);
+  console.log(`Max Mach Number X+,${formatFixed(sim.summary.maxM.t,3)}[s]`);
+  console.log(`Max Mach Number Altitude,${formatFixed(sim.summary.maxM.z,3)}[m]`);
+  console.log(`Max Mach Number,${formatFixed(sim.summary.maxM.M,3)}[-]`);
+  console.log(`Apogee X+,${formatFixed(sim.summary.apogee.t,3)}[s]`);
+  console.log(`Apogee Altitude,${formatFixed(sim.summary.apogee.z,3)}[m]`);
+  console.log(`Apogee Downrange,${formatFixed(sim.summary.apogee.x,3)}[m]`);
+  console.log(`Apogee Air Velocity,${formatFixed(sim.summary.apogee.v,3)}[m/s]`);
+  console.log(`Soft/Hard Landing X+,${formatFixed(sim.summary.landing.t,3)}[s]`);
+  console.log(`Soft/Hard Landing Downrange,${formatFixed(sim.summary.landing.x,3)}[m]`);
+  console.log(`Soft/Hard Landing Velocity,${formatFixed(sim.summary.landing.v,3)}[m/s]`);
+  console.log(`Soft/Hard Landing Point,[ ${formatFixed(sim.summary.landing.lat,8)} ${formatFixed(sim.summary.landing.lon,8)} ]`);
+
+  // エクスポート用に保存
+  window.__lastSim__ = sim;
+}
+
+function exportCSV(){
+  const sim = window.__lastSim__;
+  if (!sim) return;
+  const blob = new Blob([toCSV(sim)], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'forrocket_like_sim.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function resetUI(){
+  // 既定値に戻す（必要最小限）
+  document.getElementById('pitch0').value = 85.0;
+  document.getElementById('yaw0').value = 173.0;
+  document.getElementById('dt').value = 0.01;
+  document.getElementById('tMax').value = 60.0;
+}
+
+document.getElementById('runBtn').addEventListener('click', runSimulation);
+document.getElementById('exportBtn').addEventListener('click', exportCSV);
+document.getElementById('resetBtn').addEventListener('click', resetUI);
+
+// 初期化
+createCharts();
+runSimulation();
+  </script>
+</body>
+</html>
